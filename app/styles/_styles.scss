@@ -1,0 +1,46 @@
+body {
+    font-family: $mainFont;
+}
+
+/* Structural elements */
+.Page-wrapper {
+    width: 800px;
+    margin: auto;
+}
+
+section {
+    width: 500px;
+    margin-right: 20px;
+}
+
+aside {
+    width: 280px;
+}
+
+/* Accordion */
+.Accordion{
+
+}
+
+.Accordion-header {
+    background-color: $lightGrey;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.Accordion-content {
+    background-color: $bgGrey;
+}
+
+.Accordion-content.is-open {
+    display: block;
+}
+
+.Accordion-content.is-close {
+    display: none;
+}
+
+/* Utilities */
+.u-floatLeft {
+    float: left;
+}
