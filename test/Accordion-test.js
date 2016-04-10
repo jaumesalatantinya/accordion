@@ -115,23 +115,23 @@ describe("Accordion Tests", () => {
                 });
         });
 
-        it("Should throw an error when no url is passed as param", () => {
+        it("Should throw an error when no url is passed as param", (done) => {
             document.body.innerHTML = validAccordionHTML;
             const a = new Accordion('#a1', 2);
             a.init();
             a.loadAjaxContent()
-                .then(() => {
-                    expect(a.error).to.equal(true);
+                .catch((e)=> {
                     done();
+                    expect(a.error).to.equal(true);
                 });
         });
 
-        it("Should throw an error when no valid url is passed as param", () => {
+        it("Should throw an error when no valid url is passed as param", (done) => {
             document.body.innerHTML = validAccordionHTML;
             const a = new Accordion('#a1', 2);
             a.init();
             a.loadAjaxContent('http://wwww.dummy-url.com')
-                .then(() => {
+                .then((e) => {
                     expect(a.error).to.equal(true);
                     done();
                 });
