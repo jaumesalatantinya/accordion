@@ -20,12 +20,6 @@ describe("Accordion Tests", () => {
             expect(a.error).to.equal(false);
         });
     });
-
-
-    describe("Init", () => {
-        it("Should ", () => {
-        });
-    });
     
 
     describe("Validate HTML", () => {
