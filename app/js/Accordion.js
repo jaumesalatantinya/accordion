@@ -4,20 +4,27 @@ class Accordion {
 
         this.panels = [];
         this.error = false;
-        if (!target) { 
+        this.defaultPanel = defaultPanel;
+        if (target) { 
+            this.target = target;        
+        }
+        else {
             this.dispatchError('No id target passed as param');
-            return;
         }
-        this.target = target;
-        this.validateHtml();
-        this.getPanels();
-        this.addClickEventToPanelHeaders();
-        this.closeAllPanels();
-        this.loadAjaxContent();
-        if (defaultPanel > this.panels.length){
-            defaultPanel = 0;
+    }
+
+    init () {
+
+        if (!this.error) { 
+            this.validateHtml();
+            this.getPanels();
+            this.addClickEventToPanelHeaders();
+            this.closeAllPanels();
+            if (this.defaultPanel > this.panels.length){
+                this.defaultPanel = 0;
+            }
+            this.openPanel(this.panels[this.defaultPanel]);
         }
-        this.openPanel(this.panels[defaultPanel]);
     }
 
     validateHtml () {
@@ -84,27 +91,35 @@ class Accordion {
         }
     }
 
-    loadAjaxContent () {
+    loadAjaxContent (url) {
 
         if (!this.error) {
-            fetch('data/users.json')
-                .then((response) => response.json())
-                .then((users) => {
-                    let html = '';
-                    users.forEach((user) => {
-                        html += `<p>${user.name} - ${user.email}</p>`;
-                    });
-                    this.panels[this.panels.length-1].content.innerHTML = html;
-                })
-                .catch(e => this.dispatchError(e));
+            if (url) {
+                return fetch(url)
+                    .then((response) => response.json())
+                    .then((users) => {
+                        let html = '';
+                        users.forEach((user) => {
+                            html += `<p>${user.name} - ${user.email}</p>`;
+                        });
+                        this.panels[this.panels.length-1].content.innerHTML = html;
+                    })
+                    .catch(e => this.dispatchError(e));
+            }
+            else {
+                return Promise.reject();
+                this.dispatchError('No url passed as param');
+            }
         }
     }
 
     dispatchError (e) {
-        console.log (e);
-        this.error = true;
-        if (document.querySelector(this.target)){
-            document.querySelector(this.target).innerHTML = `<div class="u-error">${e}</div>`;
+        if (e){
+            console.log (e);
+            this.error = true;
+            if (document.querySelector(this.target)){
+                document.querySelector(this.target).innerHTML = `<div class="u-error">${e}</div>`;
+            }
         }
     }
 }

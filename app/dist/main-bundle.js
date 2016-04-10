@@ -53,7 +53,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	window.onload = function () {
-	    var accordion1 = new _Accordion2.default('#a1', 2);
+	    var accordion1 = new _Accordion2.default('#a1', 3);
+	    accordion1.init();
+	    accordion1.loadAjaxContent('data/users.json');
 	};
 
 /***/ },
@@ -78,23 +80,30 @@
 	
 	        this.panels = [];
 	        this.error = false;
-	        if (!target) {
+	        this.defaultPanel = defaultPanel;
+	        if (target) {
+	            this.target = target;
+	        } else {
 	            this.dispatchError('No id target passed as param');
-	            return;
 	        }
-	        this.target = target;
-	        this.validateHtml();
-	        this.getPanels();
-	        this.addClickEventToPanelHeaders();
-	        this.closeAllPanels();
-	        this.loadAjaxContent();
-	        if (defaultPanel > this.panels.length) {
-	            defaultPanel = 0;
-	        }
-	        this.openPanel(this.panels[defaultPanel]);
 	    }
 	
 	    _createClass(Accordion, [{
+	        key: 'init',
+	        value: function init() {
+	
+	            if (!this.error) {
+	                this.validateHtml();
+	                this.getPanels();
+	                this.addClickEventToPanelHeaders();
+	                this.closeAllPanels();
+	                if (this.defaultPanel > this.panels.length) {
+	                    this.defaultPanel = 0;
+	                }
+	                this.openPanel(this.panels[this.defaultPanel]);
+	            }
+	        }
+	    }, {
 	        key: 'validateHtml',
 	        value: function validateHtml() {
 	
@@ -166,30 +175,37 @@
 	        }
 	    }, {
 	        key: 'loadAjaxContent',
-	        value: function loadAjaxContent() {
+	        value: function loadAjaxContent(url) {
 	            var _this2 = this;
 	
 	            if (!this.error) {
-	                fetch('data/users.json').then(function (response) {
-	                    return response.json();
-	                }).then(function (users) {
-	                    var html = '';
-	                    users.forEach(function (user) {
-	                        html += '<p>' + user.name + ' - ' + user.email + '</p>';
+	                if (url) {
+	                    return fetch(url).then(function (response) {
+	                        return response.json();
+	                    }).then(function (users) {
+	                        var html = '';
+	                        users.forEach(function (user) {
+	                            html += '<p>' + user.name + ' - ' + user.email + '</p>';
+	                        });
+	                        _this2.panels[_this2.panels.length - 1].content.innerHTML = html;
+	                    }).catch(function (e) {
+	                        return _this2.dispatchError(e);
 	                    });
-	                    _this2.panels[_this2.panels.length - 1].content.innerHTML = html;
-	                }).catch(function (e) {
-	                    return _this2.dispatchError(e);
-	                });
+	                } else {
+	                    return Promise.reject();
+	                    this.dispatchError('No url passed as param');
+	                }
 	            }
 	        }
 	    }, {
 	        key: 'dispatchError',
 	        value: function dispatchError(e) {
-	            console.log(e);
-	            this.error = true;
-	            if (document.querySelector(this.target)) {
-	                document.querySelector(this.target).innerHTML = '<div class="u-error">' + e + '</div>';
+	            if (e) {
+	                console.log(e);
+	                this.error = true;
+	                if (document.querySelector(this.target)) {
+	                    document.querySelector(this.target).innerHTML = '<div class="u-error">' + e + '</div>';
+	                }
 	            }
 	        }
 	    }]);
