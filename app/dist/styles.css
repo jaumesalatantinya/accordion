@@ -217,20 +217,23 @@ aside {
   width: 280px; }
 
 /* Accordion */
-.Accordion-header {
+.Accordion dt.Accordion-header {
   background-color: #d1d1d1;
   margin-bottom: 20px;
   cursor: pointer; }
 
-.Accordion-content {
+.Accordion dd.Accordion-content {
   background-color: #f6f6f6; }
 
-.Accordion-content.is-open {
+.Accordion dd.Accordion-content.is-open {
   display: block; }
 
-.Accordion-content.is-close {
+.Accordion dd.Accordion-content.is-close {
   display: none; }
 
 /* Utilities */
 .u-floatLeft {
   float: left; }
+
+.u-error {
+  color: #FF0000; }

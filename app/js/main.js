@@ -1,5 +1,5 @@
 import Accordion from './Accordion';
 
 window.onload = () => {
-    const accordion = new Accordion(2);
-}
+    const accordion1 = new Accordion('#a1', 2);
+};

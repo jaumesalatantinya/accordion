@@ -1,2 +1,204 @@
-!function(e){function n(o){if(t[o])return t[o].exports;var a=t[o]={exports:{},id:o,loaded:!1};return e[o].call(a.exports,a,a.exports,n),a.loaded=!0,a.exports}var t={};return n.m=e,n.c=t,n.p="",n(0)}([function(e,n,t){"use strict";function o(e){return e&&e.__esModule?e:{"default":e}}var a=t(1),l=o(a);window.onload=function(){new l["default"](2)}},function(e,n){"use strict";function t(e,n){if(!(e instanceof n))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(n,"__esModule",{value:!0});var o=function(){function e(e,n){for(var t=0;t<n.length;t++){var o=n[t];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(n,t,o){return t&&e(n.prototype,t),o&&e(n,o),n}}(),a=function(){function e(){var n=arguments.length<=0||void 0===arguments[0]?0:arguments[0];t(this,e),this.panels=[],this.getPanels(),this.addClickEventToPanelHeaders(),this.closeAllPanels(),this.loadAjaxContent(),n>this.panels.length&&(n=0),this.openPanel(this.panels[n])}return o(e,[{key:"getPanels",value:function(){for(var e=document.querySelectorAll(".Accordion-header"),n=document.querySelectorAll(".Accordion-content"),t=e.length,o=0;t>o;o++)this.panels[o]={header:e[o],content:n[o]}}},{key:"addClickEventToPanelHeaders",value:function(){var e=this;this.panels.forEach(function(n){n.header.addEventListener("click",function(t){e.closeAllPanels(),e.openPanel(n)})})}},{key:"closeAllPanels",value:function(){for(var e=0;e<this.panels.length;e++)this.panels[e].content.classList.remove("is-open"),this.panels[e].content.classList.add("is-close")}},{key:"openPanel",value:function(e){e.content.classList.remove("is-close"),e.content.classList.add("is-open")}},{key:"loadAjaxContent",value:function(){var e=this;fetch("data/users.json").then(function(e){return e.json()}).then(function(n){var t="";n.forEach(function(e){t+="<p>"+e.name+" - "+e.email+"</p>"}),e.panels[e.panels.length-1].content.innerHTML=t})["catch"](function(e){return console.log(e)})}}]),e}();n["default"]=a}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _Accordion = __webpack_require__(1);
+	
+	var _Accordion2 = _interopRequireDefault(_Accordion);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	window.onload = function () {
+	    var accordion1 = new _Accordion2.default('#a1', 2);
+	};
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Accordion = function () {
+	    function Accordion(target) {
+	        var defaultPanel = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	
+	        _classCallCheck(this, Accordion);
+	
+	        this.panels = [];
+	        this.error = false;
+	        if (!target) {
+	            this.dispatchError('No id target passed as param');
+	            return;
+	        }
+	        this.target = target;
+	        this.validateHtml();
+	        this.getPanels();
+	        this.addClickEventToPanelHeaders();
+	        this.closeAllPanels();
+	        this.loadAjaxContent();
+	        if (defaultPanel > this.panels.length) {
+	            defaultPanel = 0;
+	        }
+	        this.openPanel(this.panels[defaultPanel]);
+	    }
+	
+	    _createClass(Accordion, [{
+	        key: 'validateHtml',
+	        value: function validateHtml() {
+	
+	            if (!this.error) {
+	                if (!document.querySelector(this.target)) {
+	                    this.dispatchError('No HTML elements for id target: ' + this.target);
+	                    return;
+	                }
+	                if (!document.querySelector(this.target).classList.contains('Accordion')) {
+	                    this.dispatchError('Target doesn\'t have Accordion class');
+	                    return;
+	                }
+	                var headers = document.querySelectorAll(this.target + ' .Accordion-header');
+	                var contents = document.querySelectorAll(this.target + ' .Accordion-content');
+	                if (headers.length == 0 || contents.length == 0 || headers.length != contents.length) {
+	                    this.dispatchError('Accordion is empty or dt and dd elements doesn\'t match');
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'getPanels',
+	        value: function getPanels() {
+	
+	            if (!this.error) {
+	                var headers = document.querySelectorAll(this.target + ' .Accordion-header');
+	                var contents = document.querySelectorAll(this.target + ' .Accordion-content');
+	                var numPanels = headers.length;
+	                for (var i = 0; i < numPanels; i++) {
+	                    this.panels[i] = {
+	                        header: headers[i],
+	                        content: contents[i]
+	                    };
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'addClickEventToPanelHeaders',
+	        value: function addClickEventToPanelHeaders() {
+	            var _this = this;
+	
+	            if (!this.error) {
+	                this.panels.forEach(function (panel) {
+	                    panel.header.addEventListener('click', function (e) {
+	                        _this.closeAllPanels();
+	                        _this.openPanel(panel);
+	                    });
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'closeAllPanels',
+	        value: function closeAllPanels() {
+	
+	            if (!this.error) {
+	                for (var i = 0; i < this.panels.length; i++) {
+	                    this.panels[i].content.classList.remove('is-open');
+	                    this.panels[i].content.classList.add('is-close');
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'openPanel',
+	        value: function openPanel(panel) {
+	
+	            if (!this.error) {
+	                panel.content.classList.remove('is-close');
+	                panel.content.classList.add('is-open');
+	            }
+	        }
+	    }, {
+	        key: 'loadAjaxContent',
+	        value: function loadAjaxContent() {
+	            var _this2 = this;
+	
+	            if (!this.error) {
+	                fetch('data/users.json').then(function (response) {
+	                    return response.json();
+	                }).then(function (users) {
+	                    var html = '';
+	                    users.forEach(function (user) {
+	                        html += '<p>' + user.name + ' - ' + user.email + '</p>';
+	                    });
+	                    _this2.panels[_this2.panels.length - 1].content.innerHTML = html;
+	                }).catch(function (e) {
+	                    return _this2.dispatchError(e);
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'dispatchError',
+	        value: function dispatchError(e) {
+	            console.log(e);
+	            this.error = true;
+	            if (document.querySelector(this.target)) {
+	                document.querySelector(this.target).innerHTML = '<div class="u-error">' + e + '</div>';
+	            }
+	        }
+	    }]);
+	
+	    return Accordion;
+	}();
+	
+	exports.default = Accordion;
+
+/***/ }
+/******/ ]);
 //# sourceMappingURL=main-bundle.js.map
