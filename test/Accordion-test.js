@@ -19,6 +19,7 @@ describe("Sanitize tests", () => {
 
 describe("Accordion Tests", () => {
 
+
     describe("Contructor", () => {
 
         it("Should store as object props target and defaultPanel when correct values are passed as parameters", () => {
@@ -43,7 +44,8 @@ describe("Accordion Tests", () => {
             expect(a.panels).to.be.empty;
         });
     });
-    
+
+  
     describe("Init", () => {
 
         let a;
@@ -76,6 +78,7 @@ describe("Accordion Tests", () => {
 
         
     });
+
 
     describe("Validate HTML", () => {
         
@@ -153,6 +156,12 @@ describe("Accordion Tests", () => {
             a.openPanel(panel);
             expect(a.panels[0].content.classList.contains('is-open')).to.equal(true);
             document.body.innerHTML = '';
+        });
+    });
+
+    describe("Add Click Event To Panel Headers", () => {
+        it("Should asign click event to header panels", () => {
+            
         });
     });
 
