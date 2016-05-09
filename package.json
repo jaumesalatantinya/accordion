@@ -1,7 +1,7 @@
 {
-  "name": "scm-spain-frontend-exercise",
+  "name": "accordion",
   "version": "1.0.0",
-  "description": "Frontend exercise SCM Spain",
+  "description": "Accordion made in vanila JS",
   "main": "index.js",
   "scripts": {
     "start": "npm run build && browser-sync start --server app",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaumesalatantinya/jaumesalatantinya.github.io.git"
+    "url": "git+https://github.com/jaumesalatantinya/accordion.git"
   },
   "author": "Jaume Sala Tantinya",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jaumesalatantinya/jaumesalatantinya.github.io/issues"
+    "url": "https://github.com/jaumesalatantinya/accordion/issues"
   },
-  "homepage": "https://github.com/jaumesalatantinya/jaumesalatantinya.github.io#readme",
+  "homepage": "https://github.com/jaumesalatantinya/accordion#readme",
   "devDependencies": {
     "babel-cli": "^6.7.5",
     "babel-core": "^6.7.6",
