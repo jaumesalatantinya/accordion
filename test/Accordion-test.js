@@ -19,10 +19,16 @@ describe("Sanitize tests", () => {
 describe("Accordion Tests", () => {
 
     describe("Contructor", () => {
-        it("Should init panels array empty", () => {
-            const a = new Accordion();
-            expect(a.panels).to.exist;
-            expect(a.panels).to.be.empty;
+
+        it("Should store as object props target and defaultPanel when correct values are passed as parameters", () => {
+            const a = new Accordion('#a1',1);
+            expect(a.target).to.equal('#a1');
+            expect(a.defaultPanel).to.equal(1);
+        });
+
+        it("Should init defaultPanel to 0 when no value is passed as param", () => {
+            const a = new Accordion('#a1');
+            expect(a.defaultPanel).to.equal(0);
         });
 
         it("Should dispatch error when no target is passed as param", () => {
