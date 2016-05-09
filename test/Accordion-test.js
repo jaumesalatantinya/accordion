@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import { spy } from 'sinon';
 import { fetch } from "isomorphic-fetch";
 import Accordion from '../app/js/Accordion';
 
@@ -36,45 +37,80 @@ describe("Accordion Tests", () => {
             expect(a.error).to.equal(true);
         });
 
-        it("Should init Accordion.error to false when correct HTML is in the DOM", () => {
-            document.body.innerHTML = validAccordionHTML;
-            const a = new Accordion('#a1',0);
-            expect(a.error).to.equal(false);
+        it("Should init panels array empty", () => {
+            const a = new Accordion();
+            expect(a.panels).to.exist;
+            expect(a.panels).to.be.empty;
         });
     });
     
+    describe("Init", () => {
+
+        let a;
+        beforeEach(() => {
+            a = new Accordion('#a1',1);
+            document.body.innerHTML = validAccordionHTML; 
+        });
+        afterEach(() => {
+            document.body.innerHTML = ''; 
+        });
+
+        it("Should call validateHtml getPanels addClickEventToPanelHeaders closeAllPanels & openPanel", () => {
+            spy(a, 'validateHtml');
+            spy(a, 'getPanels');
+            spy(a, 'addClickEventToPanelHeaders');
+            spy(a, 'closeAllPanels');
+            spy(a, 'openPanel');
+            a.init();
+            expect(a.validateHtml.called).to.equal(true);
+            expect(a.getPanels.called).to.equal(true);
+            expect(a.addClickEventToPanelHeaders.called).to.equal(true);
+            expect(a.closeAllPanels.called).to.equal(true);
+            expect(a.openPanel.called).to.equal(true);
+        });
+
+        it("Should asign defaultPanel to 0 if default panel is greater than panels.length", () => {
+            expect(a.target).to.equal('#a1');
+            expect(a.defaultPanel).to.equal(1);
+        });
+
+        
+    });
 
     describe("Validate HTML", () => {
         
+        let a;
+        beforeEach(() => {
+            a = new Accordion('#a1', 2);
+            spy(a, 'dispatchError');
+        });
+        afterEach(() => {
+            document.body.innerHTML = ''; 
+        });
+
         it("Should dispatch error when no Accordion is in HTML", () => {
-            const a = new Accordion('#a1', 2);
-            a.init();
             a.validateHtml();
-            expect(a.error).to.equal(false);
+            expect(a.dispatchError.calledWith('No HTML elements for id target: #a1')).to.equal(true);
         });
 
         it("Should dispatch error when target element has no class Accordion ", () => {
             document.body.innerHTML = '<dl id="a1"></dl>';
-            const a = new Accordion('#a1', 2);
-            a.init();
             a.validateHtml();
-            expect(a.error).to.equal(true);
+            expect(a.dispatchError.calledWith('Target doesn\'t have Accordion class')).to.equal(true);
+            
         });
 
         it("Should dispatch error when Accordion has no child elements", () => {
             document.body.innerHTML = '<dl id="a1" class="Accordion"></dl>';
-            const a = new Accordion('#a1', 2);
-            a.init();
             a.validateHtml();
-            expect(a.error).to.equal(true);
+            expect(a.dispatchError.calledWith('Accordion is empty or dt and dd elements doesn\'t match')).to.equal(true);
+
         });
 
         it("Should dispatch error when dt and dd doesn't match", () => {
             document.body.innerHTML = '<dl id="a1" class="Accordion"><dt class="Accordion-header">Section 1</dt></dl>';
-            const a = new Accordion('#a1', 2);
-            a.init();
             a.validateHtml();
-            expect(a.error).to.equal(true);
+            expect(a.dispatchError.calledWith('Accordion is empty or dt and dd elements doesn\'t match')).to.equal(true);
         });
     });
 
@@ -83,7 +119,7 @@ describe("Accordion Tests", () => {
         it("Should fill panels with DOM elements", () => {
             document.body.innerHTML = validAccordionHTML;
             const a = new Accordion('#a1', 2);
-            a.init();
+            a.getPanels();
             expect(a.panels.length).to.equal(4);
         });
     });
@@ -93,7 +129,7 @@ describe("Accordion Tests", () => {
         it("Should remove all is-open class from panels contents and add is-close class", () => {
             document.body.innerHTML = validAccordionHTML;
             const a = new Accordion('#a1', 2);
-            a.init();
+            a.getPanels();
             a.closeAllPanels();
             expect(a.panels[0].content.classList.contains('is-open')).to.equal(false);
             expect(a.panels[1].content.classList.contains('is-open')).to.equal(false);
@@ -103,74 +139,81 @@ describe("Accordion Tests", () => {
             expect(a.panels[1].content.classList.contains('is-close')).to.equal(true);
             expect(a.panels[2].content.classList.contains('is-close')).to.equal(true);
             expect(a.panels[3].content.classList.contains('is-close')).to.equal(true);
+            document.body.innerHTML = '';
         });
     });
 
 
     describe("Open Panel", () => {
-        it("Should add all is-open class to panel passed as param", () => {
+        it("Should add is-open class to panel passed as param", () => {
             document.body.innerHTML = validAccordionHTML;
             const a = new Accordion('#a1', 2);
-            a.init();
+            a.getPanels();
             let panel = a.panels[0];
             a.openPanel(panel);
             expect(a.panels[0].content.classList.contains('is-open')).to.equal(true);
+            document.body.innerHTML = '';
         });
     });
 
 
-    describe("Load Ajax Content", () => {
-        it("Should attach to the last panel content from JSON", (done) => {
-            document.body.innerHTML = validAccordionHTML;
-            const a = new Accordion('#a1', 2);
-            a.init();
-            a.loadAjaxContent('http://localhost:3000/data/users-test.json')
-                .then(() => {
-                    expect(a.panels[3].content.innerHTML).to.equal('<p>test1 - test1@test.com</p><p>test2 - test2@test.com</p>');
-                    done();
-                });
-        });
+    // describe("Load Ajax Content", () => {
+    //     it("Should attach to the last panel content from JSON", (done) => {
+    //         document.body.innerHTML = validAccordionHTML;
+    //         const a = new Accordion('#a1', 2);
+    //         a.init();
+    //         a.loadAjaxContent('http://localhost:3000/data/users-test.json')
+    //             .then(() => {
+    //                 expect(a.panels[3].content.innerHTML).to.equal('<p>test1 - test1@test.com</p><p>test2 - test2@test.com</p>');
+    //                 done();
+    //             });
+    //     });
 
-        it("Should throw an error when no url is passed as param", (done) => {
-            document.body.innerHTML = validAccordionHTML;
-            const a = new Accordion('#a1', 2);
-            a.init();
-            a.loadAjaxContent()
-                .catch((e)=> {
-                    done();
-                    expect(a.error).to.equal(true);
-                });
-        });
+    //     it("Should throw an error when no url is passed as param", (done) => {
+    //         document.body.innerHTML = validAccordionHTML;
+    //         const a = new Accordion('#a1', 2);
+    //         a.init();
+    //         a.loadAjaxContent()
+    //             .catch((e)=> {
+    //                 done();
+    //                 expect(a.error).to.equal(true);
+    //             });
+    //     });
 
-        it("Should throw an error when no valid url is passed as param", (done) => {
-            document.body.innerHTML = validAccordionHTML;
-            const a = new Accordion('#a1', 2);
-            a.init();
-            a.loadAjaxContent('http://wwww.dummy-url.com')
-                .then((e) => {
-                    expect(a.error).to.equal(true);
-                    done();
-                });
-        });
-    });
+    //     it("Should throw an error when no valid url is passed as param", (done) => {
+    //         document.body.innerHTML = validAccordionHTML;
+    //         const a = new Accordion('#a1', 2);
+    //         a.init();
+    //         a.loadAjaxContent('http://wwww.dummy-url.com')
+    //             .then((e) => {
+    //                 expect(a.error).to.equal(true);
+    //                 done();
+    //             });
+    //     });
+    // });
 
 
     describe("Dispatch Error", () => {
+        let a;
+        beforeEach(() => {
+            a = new Accordion('#a1', 2);
+        });
+        afterEach(() => {
+            document.body.innerHTML = ''; 
+        });
+
         it("Should do nothing when no error is passed as param", () => {
-            const a = new Accordion('#a1', 2);
             a.dispatchError();
             expect(a.error).to.equal(false);
         });
 
         it("Should asign this.error to true when some error is passed as param", () => {
-            const a = new Accordion('#a1', 2);
             a.dispatchError('Test Error');
             expect(a.error).to.equal(true);
         });
 
         it("Should render to HTML when there is an accordion", () => {
             document.body.innerHTML = validAccordionHTML;
-            const a = new Accordion('#a1', 2);
             a.dispatchError('Test Error');
             expect(document.querySelector('#a1').innerHTML).to.equal('<div class="u-error">Test Error</div>')
         });
