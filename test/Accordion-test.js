@@ -5,10 +5,26 @@ import Accordion from '../app/js/Accordion';
 
 const validAccordionHTML = '<dl id="a1" class="Accordion"><dt class="Accordion-header">Section 1</dt><dd class="Accordion-content"><p>Section 1 Content...</p></dd><dt class="Accordion-header">Section 2</dt><dd class="Accordion-content"><p>Section 2 Content...</p></dd><dt class="Accordion-header">Section 3</dt><dd class="Accordion-content"><p>Section 3 Content...</p></dd><dt class="Accordion-header">Section 4</dt><dd class="Accordion-content"><p>Section 3 Content...</p></dd></dl>';
 
+describe("Sanitize tests", () => {
+    it("Should do math's 5==5", () => {
+        expect(5===5).to.equal(true);
+    });
+
+    it("Should fail with incorrect math's 4==5", () => {
+        expect(4===5).to.equal(false);
+    });
+});
+
+
 describe("Accordion Tests", () => {
 
-
     describe("Contructor", () => {
+        it("Should init panels array empty", () => {
+            const a = new Accordion();
+            expect(a.panels).to.exist;
+            expect(a.panels).to.be.empty;
+        });
+
         it("Should dispatch error when no target is passed as param", () => {
             const a = new Accordion();
             expect(a.error).to.equal(true);
