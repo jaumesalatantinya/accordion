@@ -1,3 +1,5 @@
+import UsersService from '../services/UsersService';
+
 class Accordion {
 
     constructor(target, defaultPanel = 0) {
@@ -5,6 +7,7 @@ class Accordion {
         this.panels = [];
         this.error = false;
         this.defaultPanel = defaultPanel;
+        this.usersService = new UsersService();
         if (target) { 
             this.target = target;        
         }
@@ -24,6 +27,7 @@ class Accordion {
                 this.defaultPanel = 0;
             }
             this.openPanel(this.panels[this.defaultPanel]);
+            this.loadUsers();
         }
     }
 
@@ -91,25 +95,19 @@ class Accordion {
         }
     }
 
-    loadAjaxContent (url) {
+    loadUsers () {
 
         if (!this.error) {
-            if (url) {
-                return fetch(url)
-                    .then((response) => response.json())
-                    .then((users) => {
-                        let html = '';
-                        users.forEach((user) => {
-                            html += `<p>${user.name} - ${user.email}</p>`;
-                        });
-                        this.panels[this.panels.length-1].content.innerHTML = html;
-                    })
-                    .catch(e => this.dispatchError(e));
-            }
-            else {
-                return Promise.reject();
-                this.dispatchError('No url passed as param');
-            }
+            this.usersService.getUsers().then((users) => {
+                let html = '';
+                users.forEach((user) => {
+                    html += `<p>${user.name} - ${user.email}</p>`;
+                });
+                this.panels[this.panels.length-1].content.innerHTML = html;
+            })
+            .catch((e) => {
+                this.dispatchError(e);
+            });
         }
     }
 

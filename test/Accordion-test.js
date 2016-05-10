@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { spy } from 'sinon';
 import { fetch } from "isomorphic-fetch";
-import Accordion from '../app/js/Accordion';
+import Accordion from '../app/components/Accordion';
 
 
 const validAccordionHTML = '<dl id="a1" class="Accordion"><dt class="Accordion-header">Section 1</dt><dd class="Accordion-content"><p>Section 1 Content...</p></dd><dt class="Accordion-header">Section 2</dt><dd class="Accordion-content"><p>Section 2 Content...</p></dd><dt class="Accordion-header">Section 3</dt><dd class="Accordion-content"><p>Section 3 Content...</p></dd><dt class="Accordion-header">Section 4</dt><dd class="Accordion-content"><p>Section 3 Content...</p></dd></dl>';
@@ -166,39 +166,17 @@ describe("Accordion Tests", () => {
     });
 
 
-    describe("Load Ajax Content", () => {
+    describe("Load Users", () => {
         
         it("Should attach to the last panel content from JSON", (done) => {
             document.body.innerHTML = validAccordionHTML;
             const a = new Accordion('#a1', 2);
-            a.init();
-            a.loadAjaxContent('http://localhost:3000/data/users-test.json')
-                .then(() => {
-                    expect(a.panels[3].content.innerHTML).to.equal('<p>test1 - test1@test.com</p><p>test2 - test2@test.com</p>');
-                    done();
-                });
-        });
-
-        it("Should throw an error when no url is passed as param", (done) => {
-            document.body.innerHTML = validAccordionHTML;
-            const a = new Accordion('#a1', 2);
-            a.init();
-            a.loadAjaxContent()
-                .catch((e)=> {
-                    done();
-                    expect(a.dispatchError.calledWith('No url passed as param')).to.be.true;
-                });
-        });
-
-        it("Should throw an error when dummy url is passed as param", (done) => {
-            document.body.innerHTML = validAccordionHTML;
-            const a = new Accordion('#a1', 2);
-            a.init();
-            a.loadAjaxContent('http://wwww.dummy-url.com')
-                .then((e) => {
-                    expect(a.error).to.be.true;
-                    done();
-                });
+            a.getPanels();
+            a.loadUsers();
+            setTimeout(() => {
+                expect(a.panels[3].content.innerHTML).to.equal('<p>Peter - peter@peter.es</p><p>Dan - dan@dan.es</p><p>Tomas - tomas@tomas.es</p>');
+                done();
+            }, 100);
         });
     });
 
