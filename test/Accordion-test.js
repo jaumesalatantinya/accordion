@@ -64,11 +64,11 @@ describe("Accordion Tests", () => {
             spy(a, 'closeAllPanels');
             spy(a, 'openPanel');
             a.init();
-            expect(a.validateHtml.called).to.equal(true);
-            expect(a.getPanels.called).to.equal(true);
-            expect(a.addClickEventToPanelHeaders.called).to.equal(true);
-            expect(a.closeAllPanels.called).to.equal(true);
-            expect(a.openPanel.called).to.equal(true);
+            expect(a.validateHtml.called).to.be.true;
+            expect(a.getPanels.called).to.be.true;
+            expect(a.addClickEventToPanelHeaders.called).to.be.true;
+            expect(a.closeAllPanels.called).to.be.true;
+            expect(a.openPanel.called).to.be.true;
         });
 
         it("Should asign defaultPanel to 0 if default panel is greater than panels.length", () => {
@@ -166,40 +166,41 @@ describe("Accordion Tests", () => {
     });
 
 
-    // describe("Load Ajax Content", () => {
-    //     it("Should attach to the last panel content from JSON", (done) => {
-    //         document.body.innerHTML = validAccordionHTML;
-    //         const a = new Accordion('#a1', 2);
-    //         a.init();
-    //         a.loadAjaxContent('http://localhost:3000/data/users-test.json')
-    //             .then(() => {
-    //                 expect(a.panels[3].content.innerHTML).to.equal('<p>test1 - test1@test.com</p><p>test2 - test2@test.com</p>');
-    //                 done();
-    //             });
-    //     });
+    describe("Load Ajax Content", () => {
+        
+        it("Should attach to the last panel content from JSON", (done) => {
+            document.body.innerHTML = validAccordionHTML;
+            const a = new Accordion('#a1', 2);
+            a.init();
+            a.loadAjaxContent('http://localhost:3000/data/users-test.json')
+                .then(() => {
+                    expect(a.panels[3].content.innerHTML).to.equal('<p>test1 - test1@test.com</p><p>test2 - test2@test.com</p>');
+                    done();
+                });
+        });
 
-    //     it("Should throw an error when no url is passed as param", (done) => {
-    //         document.body.innerHTML = validAccordionHTML;
-    //         const a = new Accordion('#a1', 2);
-    //         a.init();
-    //         a.loadAjaxContent()
-    //             .catch((e)=> {
-    //                 done();
-    //                 expect(a.error).to.equal(true);
-    //             });
-    //     });
+        it("Should throw an error when no url is passed as param", (done) => {
+            document.body.innerHTML = validAccordionHTML;
+            const a = new Accordion('#a1', 2);
+            a.init();
+            a.loadAjaxContent()
+                .catch((e)=> {
+                    done();
+                    expect(a.dispatchError.calledWith('No url passed as param')).to.be.true;
+                });
+        });
 
-    //     it("Should throw an error when no valid url is passed as param", (done) => {
-    //         document.body.innerHTML = validAccordionHTML;
-    //         const a = new Accordion('#a1', 2);
-    //         a.init();
-    //         a.loadAjaxContent('http://wwww.dummy-url.com')
-    //             .then((e) => {
-    //                 expect(a.error).to.equal(true);
-    //                 done();
-    //             });
-    //     });
-    // });
+        it("Should throw an error when dummy url is passed as param", (done) => {
+            document.body.innerHTML = validAccordionHTML;
+            const a = new Accordion('#a1', 2);
+            a.init();
+            a.loadAjaxContent('http://wwww.dummy-url.com')
+                .then((e) => {
+                    expect(a.error).to.be.true;
+                    done();
+                });
+        });
+    });
 
 
     describe("Dispatch Error", () => {
