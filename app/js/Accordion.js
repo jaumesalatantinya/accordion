@@ -115,7 +115,7 @@ class Accordion {
 
     dispatchError (e) {
         if (e){
-            console.log (e);
+            //console.log (e);
             this.error = true;
             if (document.querySelector(this.target)){
                 document.querySelector(this.target).innerHTML = `<div class="u-error">${e}</div>`;
