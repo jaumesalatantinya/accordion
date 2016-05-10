@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { spy } from 'sinon';
+import { spy, stub } from 'sinon';
 import { fetch } from "isomorphic-fetch";
 import Accordion from '../app/js/Accordion';
 
