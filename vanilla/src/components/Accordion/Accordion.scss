@@ -1,22 +1,3 @@
-/* Structural elements */
-body {
-    font-family: $mainFont;
-}
-
-.Page-wrapper {
-    width: 800px;
-    margin: auto;
-}
-
-section {
-    width: 500px;
-    margin-right: 20px;
-}
-
-aside {
-    width: 280px;
-}
-
 /* Accordion */
 .Accordion {
 
@@ -37,13 +18,4 @@ aside {
     & dd.Accordion-content.is-close {
         display: none;
     }
-}
-
-/* Utilities */
-.u-floatLeft {
-    float: left;
-}
-
-.u-error {
-    color: $redError;
 }

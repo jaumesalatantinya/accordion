@@ -1,13 +1,13 @@
-import UsersService from '../services/UsersService';
+import UsersService from '../../services/UsersService';
 
 class Accordion {
 
     constructor(target, defaultPanel = 0) {
 
         this.panels = [];
+        this.users = [];
         this.error = false;
         this.defaultPanel = defaultPanel;
-        this.usersService = new UsersService();
         if (target) { 
             this.target = target;        
         }
@@ -60,7 +60,7 @@ class Accordion {
                 this.panels[i] = {
                     header: headers[i], 
                     content: contents[i]
-                }
+                };
             }
         }
     }
@@ -98,16 +98,24 @@ class Accordion {
     loadUsers () {
 
         if (!this.error) {
-            this.usersService.getUsers().then((users) => {
-                let html = '';
-                users.forEach((user) => {
-                    html += `<p>${user.name} - ${user.email}</p>`;
-                });
-                this.panels[this.panels.length-1].content.innerHTML = html;
+            UsersService.getUsers().then((users) => {
+                this.users = users;
+                this.renderUsers();
             })
             .catch((e) => {
                 this.dispatchError(e);
             });
+        }
+    }
+
+    renderUsers () {
+
+        if (this.users) {
+            let html = '';
+            this.users.forEach((user) => {
+                html += `<p>${user.name} - ${user.email}</p>`;
+            });
+            this.panels[this.panels.length-1].content.innerHTML = html;
         }
     }
 
