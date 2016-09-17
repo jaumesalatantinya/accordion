@@ -1,4 +1,4 @@
-## Accordion made in vanila JS
+## Accordion made using vanilla JS
 
 <li>npm install</li>
 <li>npm run start -s</li>
