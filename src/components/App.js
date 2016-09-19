@@ -22,22 +22,16 @@ class App {
     }
 
     getSectionsFromApi () {
-        return new Promise((resolve, reject) => {
-            SectionsService.getSectionsFromApi().then( (sections) => {
-                this.sections.push(sections);
-                resolve();
-            });
+        return SectionsService.getSectionsFromApi().then ((sections) => {
+            this.sections.push(sections);
+        }).catch((error) => {
+            ErrorDispatcher.dispatchError('App--getSectionsFromApi: ' + error.message);
         });
     }
 
     renderAccordion () {
-        if (this.sections) {
-            this.accordion.loadSections(this.sections);
-            this.accordion.render();
-        }
-        else {
-            ErrorDispatcher('No content provided to render accordion');
-        }
+        this.accordion.loadSections(this.sections);
+        this.accordion.render();
     }
 }
 

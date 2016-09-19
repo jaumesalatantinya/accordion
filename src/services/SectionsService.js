@@ -49,8 +49,10 @@ class SectionsService {
         const delay = 1000;
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-            resolve(Object.assign([], section));
-        }, delay);
+                resolve(Object.assign([], section));
+            }, delay);
+            // Uncoment to see erro handling
+            //reject(new Error('Error getSections from API'));
         });
     }
 }
