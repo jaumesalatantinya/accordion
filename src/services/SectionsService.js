@@ -1,4 +1,4 @@
-class ContentProvider {
+class SectionsService {
 
     static validateHtml (target) {
         if (!document.querySelector(target)) {
@@ -15,44 +15,44 @@ class ContentProvider {
         return true;
     }
 
-    static getHtmlContent (target) {
+    static getHtmlSections (target) {
 
-        let content = [];
+        let sections = [];
         let headers = document.querySelectorAll(target + ' .Accordion-header');
         let contents = document.querySelectorAll(target + ' .Accordion-content');
         let numPanels = headers.length;
         for (let i = 0; i < numPanels; i++) {
-            content.push({
-               header: headers[i].innerHTML,
+            sections.push({
+                header: headers[i].innerHTML,
                 content: contents[i].innerHTML
             });
         }
-        return content;
+        return sections;
     }
 
 
-    static getContentFromHtml (target) {
+    static getSectionsFromHtml (target) {
 
-        if (ContentProvider.validateHtml(target)) {
-            return ContentProvider.getHtmlContent(target);
+        if (SectionsService.validateHtml(target)) {
+            return SectionsService.getHtmlSections(target);
         }
         else {
             return [];
         }
     }
 
-    static getContentFromApi () {
-        const panel = {
+    static getSectionsFromApi () {
+        const section = {
             header: 'Section 5',
             content: 'Section 5 Content...'
         };
         const delay = 1000;
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-            resolve(Object.assign([], panel));
+            resolve(Object.assign([], section));
         }, delay);
         });
     }
 }
 
-export default ContentProvider;
+export default SectionsService;

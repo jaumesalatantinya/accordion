@@ -9,7 +9,7 @@ describe('App Tests', () => {
     describe('Constructor', () => {
         it('Should empty inicialize content and accordion', () => {
             const app = new App();
-            expect(app.content).to.exist;
+            expect(app.sections).to.exist;
             expect(app.accordion).to.exist;
 
         });
@@ -17,13 +17,13 @@ describe('App Tests', () => {
   
    describe('Init', () => {
 
-        it('Should call getContentFromRenderedAccordion getContentFromApi', () => {
+        it('Should call getSectionsFromRenderedAccordion getSectionsFromApi', () => {
             const app = new App();
-            spy(app, 'getContentFromRenderedAccordion');
-            spy(app, 'getContentFromApi');
+            spy(app, 'getSectionsFromRenderedAccordion');
+            spy(app, 'getSectionsFromApi');
             app.init();
-            expect(app.getContentFromRenderedAccordion.called).to.be.true;
-            expect(app.getContentFromApi.called).to.be.true;
+            expect(app.getSectionsFromRenderedAccordion.called).to.be.true;
+            expect(app.getSectionsFromApi.called).to.be.true;
         });
     });
 });

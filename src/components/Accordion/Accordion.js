@@ -4,15 +4,15 @@ class Accordion {
 
     constructor() {
 
-        this._content = [];
+        this._sections = [];
         this.panels = [];
         this.error = false;
     }
 
-    loadContent (content) {
+    loadSections (sections) {
 
-        if (content){
-            this._content = content;
+        if (sections){
+            this._sections = sections;
         }
         else {
             ErrorDispatcher('Accordion--LoadContent: No content to load');
@@ -21,15 +21,15 @@ class Accordion {
 
     render (){
 
-        if (this._content) {
+        if (this._sections) {
             let accordionDomElement = document.createElement('dl');
             accordionDomElement.className = 'Accordion';
             let header, content;
-            for (let i = 0; i < this._content.length; i++) {
-                header = this.createHeaderElement(this._content[i].header);
+            for (let i = 0; i < this._sections.length; i++) {
+                header = this.createHeaderElement(this._sections[i].header);
                 accordionDomElement.appendChild(header);
 
-                content = this.createContentElement(this._content[i].content);
+                content = this.createContentElement(this._sections[i].content);
                 accordionDomElement.appendChild(content);
 
                 this.panels.push({

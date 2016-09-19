@@ -1,4 +1,4 @@
-import ContentProvider from '../services/ContentProvider';
+import SectionsService from '../services/SectionsService';
 import ErrorDispatcher from '../services/ErrorDispacher';
 import Accordion from './Accordion/Accordion';
 import  '../styles/index.scss';
@@ -6,33 +6,33 @@ import  '../styles/index.scss';
 class App {
 
     constructor () {
-        this.content = [];
+        this.sections = [];
         this.accordion = new Accordion();
     }
 
     init () {
-        this.getContentFromRenderedAccordion();
-        this.getContentFromApi().then(() => {
+        this.getSectionsFromRenderedAccordion();
+        this.getSectionsFromApi().then(() => {
             this.renderAccordion();
         });
     }
 
-    getContentFromRenderedAccordion () {
-        this.content = ContentProvider.getContentFromHtml('#a1');
+    getSectionsFromRenderedAccordion () {
+        this.sections = SectionsService.getSectionsFromHtml('#a1');
     }
 
-    getContentFromApi () {
+    getSectionsFromApi () {
         return new Promise((resolve, reject) => {
-            ContentProvider.getContentFromApi().then( (content) => {
-                this.content.push(content);
+            SectionsService.getSectionsFromApi().then( (sections) => {
+                this.sections.push(sections);
                 resolve();
             });
         });
     }
 
     renderAccordion () {
-        if (this.content) {
-            this.accordion.loadContent(this.content);
+        if (this.sections) {
+            this.accordion.loadSections(this.sections);
             this.accordion.render();
         }
         else {
